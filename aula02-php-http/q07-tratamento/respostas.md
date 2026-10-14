@@ -16,7 +16,11 @@ Ausência de verificação de existência do parâmetro: Se a página for acedid
 
 **1.2 Corrija o código usando `??` (valor padrão "Visitante") e `htmlspecialchars`. Faça um commit **antes** e outro **depois** da correção. Cole o código corrigido e explique.**
 
-_(responda aqui)_
+$nome = $_GET['nome'] ?? "Visitante";
+echo "Olá, " . htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
+
+ Operador ?? (Null Coalescing) resolve o aviso de erro. Se o utilizador não enviar o parâmetro ?nome=, a variável $nome recebe o valor padrão "Visitante". 
+ A função htmlspecialchars() resolve a vulnerabilidade XSS. Ela converte caracteres especiais do HTML (como < e >) em entidades seguras (como &lt; e &gt;), impedindo que o navegador os interprete como código
 
 ## 2. Saídas do terminal
 
@@ -41,24 +45,24 @@ A saída mostra a mensagem Olá, <b>Oi</b> porque o PHP juntou o texto fixa com 
 
 **2.3 **Depois da correção**: saída do mesmo comando do item 2.2**
 
-```text
-(cole aqui a saída do terminal)
-```
+Olá, &lt;b&gt;Oi&lt;/b&gt;
 
 **Explicação linha por linha:**
 
-_(responda aqui)_
+O navegador (ou o curl) agora recebe &lt;b&gt; em vez de <b>. Assim, o navegador apenas imprime o texto literalmente na tela, sem aplicar o negrito.
 
 ## 3. Perguntas
 
 **3.1 Qual aviso apareceu no item 2.1? O que ele significa?**
 
-_(responda aqui)_
+Apareceu o aviso PHP Warning: Undefined array key "nome". Isso significa que o PHP tentou procurar pela chave 'nome' dentro da superglobal $_GET, mas ela não existia (porque não passámos nada na URL).
 
 **3.2 Compare o corpo da resposta em 2.2 e 2.3. O que o `htmlspecialchars` fez com `<b>`?**
 
-_(responda aqui)_
+No item 2.2, o código devolveu as tags puras (<b>Oi</b>), aplicando o negrito. No 2.3, o htmlspecialchars converteu as tags para o formato de entidade HTML (&lt;b&gt;Oi&lt;/b&gt;), inativando o seu efeito visual.
 
 **3.3 Teste no navegador `?nome=<script>alert('Ataque')</script>` antes e depois da correção. Explique o que aconteceu e por que isso é perigoso (XSS).**
 
-_(responda aqui)_
+Antes: O navegador leu a tag <script> e executou o JavaScript, mostrando um alerta na tela.
+Depois: Com a correção, a tag <script> foi desarmada pelo htmlspecialchars e exibida apenas como texto comum.
+Por que é perigoso (XSS): O Cross-Site Scripting (XSS) permite que um atacante injete código malicioso na nossa página. Se um utilizador real clicar num link com esse script, o atacante pode roubar sessões, senhas ou infetar o utilizador.
